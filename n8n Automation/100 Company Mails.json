@@ -1,0 +1,341 @@
+{
+  "name": "100 Company Mails",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        144
+      ],
+      "id": "f52a4add-1f94-463e-b977-e3b61e9c7e1a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k",
+          "mode": "list",
+          "cachedResultName": "chennai_100_company_mails_FINAL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -576,
+        144
+      ],
+      "id": "ec25ada9-daf3-490f-8ff0-191ff1088543",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "b1qgo0D2HSn1wJv8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "=Exploring {{$json[\"Role Fit\"]}} Opportunities at {{$json[\"Company Name\"]}}",
+        "emailType": "text",
+        "message": "=Hi Hiring Team,\n\nI hope you’re doing well.\n\nI’m Praveen, actively building and working on projects in AI, ML, GenAI, and full-stack development.\nI came across {{ $json['Company Name'] }} and was really interested in the work you’re doing.\n\nI’d love to explore opportunities where I can contribute to {{ $json['Role Fit'] }}-related projects and continue learning.\n\nResume attached below. \nLooking forward to connecting.\n\nBest regards,\nPraveen\n",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        160
+      ],
+      "id": "666d483a-9c11-4136-98cb-77de280f2d10",
+      "name": "Send a message",
+      "webhookId": "0c8db793-cde0-4a79-8195-c33749b614e8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "w4xPBu6jRbycKFKA",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "12cdfPAFAPsV9eADE3N_6l1ChxVIc0Cmb",
+          "mode": "list",
+          "cachedResultName": "Praveen_Resume.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/12cdfPAFAPsV9eADE3N_6l1ChxVIc0Cmb/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -128,
+        160
+      ],
+      "id": "646afab4-6a73-4551-b1af-c84ac7103214",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lkKutDCHSPUxRFUh",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        144
+      ],
+      "id": "f65f235f-3283-42b5-bd93-f4512247d9fa",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        160
+      ],
+      "id": "2fe5e604-160e-4767-8695-29c04bd56e29",
+      "name": "Wait",
+      "webhookId": "7588e022-3635-46ca-9adc-a081e5b9bd28"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k",
+          "mode": "list",
+          "cachedResultName": "chennai_100_company_mails_FINAL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1la-H_298t5YUkjyZtH05O0vh3VNLtTmS53SmyMotS4k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company Name": "={{ $('Get row(s) in sheet').item.json['Company Name'] }}",
+            "Staus": "Yes"
+          },
+          "matchingColumns": [
+            "Company Name"
+          ],
+          "schema": [
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Domain",
+              "displayName": "Domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Role Fit",
+              "displayName": "Role Fit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email Type",
+              "displayName": "Email Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Staus",
+              "displayName": "Staus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        160
+      ],
+      "id": "c0d5f3d7-3696-4dd1-9028-59f024b43f4c",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "b1qgo0D2HSn1wJv8",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d632eba1-5f45-46cc-bb76-da60dbcbce34",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f973b6211b077ae7ed792ede0492c1182f52a5dfad171dd60a712b9d3549b523"
+  },
+  "id": "MwTZcwCe84Rvc2tU",
+  "tags": []
+}

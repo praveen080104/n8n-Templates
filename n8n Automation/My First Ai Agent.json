@@ -1,0 +1,159 @@
+{
+  "name": "My First Ai Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a smart AI assistant with access to tools such as Gmail.\n\nYour role is to:\n- Help the user with questions, explanations, and tasks\n- Take actions automatically when required\n\n----------------------------------------\n\nWHEN TO USE TOOLS:\n\nIf the user clearly asks to send an email:\n- Automatically use the Gmail tool\n- Extract recipient, subject, and message from the request\n- Fill missing details intelligently (e.g., generate a subject if not provided)\n- Do NOT ask for confirmation unless critical info is missing\n\nIf required details are missing:\n- Ask only for the missing information\n\n----------------------------------------\n\nWHEN NOT TO USE TOOLS:\n\n- If the user is just asking to write or draft an email → respond with text only\n- If the user is asking general questions → respond normally\n\n----------------------------------------\n\nBEHAVIOR:\n\n- Be helpful, clear, and natural\n- Prefer taking action instead of just explaining when appropriate\n- Do not say \"I will send email\" — directly use the tool when needed\n\n----------------------------------------\n\nEXAMPLES:\n\nUser: Send email to abc@gmail.com saying hello  \n→ Use Gmail tool\n\nUser: Write a professional email for leave  \n→ Just generate text\n\nUser: What is AI?  \n→ Explain normally\n\n----------------------------------------\n\nIMPORTANT:\n\nYou are an action-taking assistant, not just a chatbot.\nUse tools when needed, otherwise respond normally.\n\n{{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        16
+      ],
+      "id": "fa3d1edd-9fc4-468e-a79d-e814e627cf91",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        224
+      ],
+      "id": "c5c7fee8-de16-4668-b192-9755db5f5795",
+      "name": "Send a message in Gmail",
+      "webhookId": "6b8dffea-8e79-499c-81f3-a397dc3e43b1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "17lWNVjoMjunpEmG",
+          "name": "Resumebuilder account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        16,
+        224
+      ],
+      "id": "40b4eaae-0573-4500-89fc-4aab6df6f2e0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -224,
+        16
+      ],
+      "id": "90fc5b4d-31e0-48de-a937-4a3032d84648",
+      "name": "When chat message received",
+      "webhookId": "b73ee277-ca05-447a-8ceb-edc5eda6458b"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        224
+      ],
+      "id": "29d0e359-5e30-43a4-90cf-6d288dda3613",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "84lpwjbfwwCtvtuT",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "caa0878a-a2e1-410c-994f-4e1dd985ab4f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f973b6211b077ae7ed792ede0492c1182f52a5dfad171dd60a712b9d3549b523"
+  },
+  "id": "aTbifZW0EqOYQgZv",
+  "tags": []
+}
